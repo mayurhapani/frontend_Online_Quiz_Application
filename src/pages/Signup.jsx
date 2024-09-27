@@ -7,7 +7,6 @@ const Signup = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("student");
   const navigate = useNavigate();
 
   const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -19,7 +18,6 @@ const Signup = () => {
         name,
         email,
         password,
-        role,
       });
       toast.success("User registered successfully!");
       navigate("/signin");
@@ -35,7 +33,7 @@ const Signup = () => {
   return (
     <div className="bg-gradient-to-r from-blue-100 to-indigo-200 min-h-screen flex items-center justify-center">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h1 className="text-3xl font-bold text-center text-blue-700 mb-6">EduManage Sign Up</h1>
+        <h1 className="text-3xl font-bold text-center text-blue-700 mb-6">Sign Up</h1>
         <form className="space-y-4" onSubmit={handleSubmit}>
           <div>
             <label htmlFor="name" className="block text-sm font-medium text-gray-700">
@@ -81,22 +79,6 @@ const Signup = () => {
               placeholder="Enter your password"
               required
             />
-          </div>
-          <div>
-            <label htmlFor="role" className="block text-sm font-medium text-gray-700">
-              Role
-            </label>
-            <select
-              id="role"
-              value={role}
-              onChange={(e) => setRole(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm
-                focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-              required
-            >
-              <option value="student">Student</option>
-              <option value="teacher">Teacher</option>
-            </select>
           </div>
           <button
             type="submit"

@@ -1,81 +1,85 @@
-import { Container, Typography, Grid, Paper, Box } from "@mui/material";
+import { Container, Typography, Grid, Paper, Button } from "@mui/material";
 import { useState, useEffect } from "react";
-import CourseList from "../components/CourseList";
-import StudentList from "../components/StudentList";
-import TeacherList from "../components/TeacherList";
-import AssignmentList from "../components/AssignmentList";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 const AdminDashboard = () => {
-  const [refreshKey, setRefreshKey] = useState(0);
-  const [courses, setCourses] = useState([]);
+  const [quizzes, setQuizzes] = useState([]);
 
   useEffect(() => {
-    fetchCourses();
-  }, [refreshKey]);
+    fetchQuizzes();
+  }, []);
 
-  const fetchCourses = async () => {
+  const fetchQuizzes = async () => {
     try {
-      const token = localStorage.getItem("token");
-      const response = await axios.get(`${BASE_URL}/courses/getAllCourses`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setCourses(response.data.data.docs || []);
+      const response = await axios.get(`${BASE_URL}/quizzes`);
+      setQuizzes(response.data.data);
     } catch (error) {
-      console.error("Error fetching courses:", error);
+      console.error("Error fetching quizzes:", error);
     }
   };
 
-  const handleRefresh = () => {
-    setRefreshKey((prevKey) => prevKey + 1);
+  const handleDeleteQuiz = async (quizId) => {
+    try {
+      await axios.delete(`${BASE_URL}/quizzes/${quizId}`);
+      setQuizzes(quizzes.filter((quiz) => quiz._id !== quizId));
+    } catch (error) {
+      console.error("Error deleting quiz:", error);
+    }
   };
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-      <Typography variant="h4" gutterBottom component="h1" sx={{ mb: 4 }}>
+      <Typography variant="h4" gutterBottom>
         Admin Dashboard
       </Typography>
       <Grid container spacing={3}>
-        <Grid item xs={12} md={6}>
-          <Paper elevation={3} sx={{ p: 3, height: "100%" }}>
-            <Typography variant="h6" gutterBottom component="h2">
-              Teachers
+        <Grid item xs={12}>
+          <Paper elevation={3} sx={{ p: 3 }}>
+            <Typography variant="h6" gutterBottom>
+              Manage Quizzes
             </Typography>
-            <Box sx={{ height: "calc(100% - 40px)" }}>
-              <TeacherList refreshKey={refreshKey} onRefresh={handleRefresh} />
-            </Box>
-          </Paper>
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <Paper elevation={3} sx={{ p: 3, height: "100%" }}>
-            <Typography variant="h6" gutterBottom component="h2">
-              Students
-            </Typography>
-            <Box sx={{ height: "calc(100% - 40px)" }}>
-              <StudentList refreshKey={refreshKey} onRefresh={handleRefresh} />
-            </Box>
-          </Paper>
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <Paper elevation={3} sx={{ p: 3, height: "100%" }}>
-            <Typography variant="h6" gutterBottom component="h2">
-              Courses
-            </Typography>
-            <Box sx={{ height: "calc(100% - 40px)" }}>
-              <CourseList courses={courses} onCourseSelect={() => {}} studentView={false} />
-            </Box>
-          </Paper>
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <Paper elevation={3} sx={{ p: 3, height: "100%" }}>
-            <Typography variant="h6" gutterBottom component="h2">
-              Assignments
-            </Typography>
-            <Box sx={{ height: "calc(100% - 40px)" }}>
-              <AssignmentList refreshKey={refreshKey} onRefresh={handleRefresh} />
-            </Box>
+            <Button
+              component={Link}
+              to="/create-quiz"
+              variant="contained"
+              color="primary"
+              sx={{ mb: 2 }}
+            >
+              Create New Quiz
+            </Button>
+            <Grid container spacing={3}>
+              {quizzes.map((quiz) => (
+                <Grid item xs={12} md={6} key={quiz._id}>
+                  <Paper elevation={3} sx={{ p: 3 }}>
+                    <Typography variant="h6" gutterBottom>
+                      {quiz.title}
+                    </Typography>
+                    <Typography variant="body1" gutterBottom>
+                      {quiz.description}
+                    </Typography>
+                    <Button
+                      component={Link}
+                      to={`/edit-quiz/${quiz._id}`}
+                      variant="contained"
+                      color="secondary"
+                      sx={{ mr: 2 }}
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      variant="contained"
+                      color="error"
+                      onClick={() => handleDeleteQuiz(quiz._id)}
+                    >
+                      Delete
+                    </Button>
+                  </Paper>
+                </Grid>
+              ))}
+            </Grid>
           </Paper>
         </Grid>
       </Grid>

@@ -8,14 +8,13 @@ import { AuthContext } from "./context/AuthProvider.jsx";
 import Header from "./components/Header.jsx";
 import GlobalLoader from "./components/GlobalLoader.jsx";
 import AdminDashboard from "./pages/AdminDashboard.jsx";
-import TeacherDashboard from "./pages/TeacherDashboard.jsx";
-import StudentDashboard from "./pages/StudentDashboard.jsx";
-import CourseManagement from "./pages/CourseManagement.jsx";
-import EnrollmentManagement from "./pages/EnrollmentManagement.jsx";
-import GradeManagement from "./pages/GradeManagement.jsx";
+import UserDashboard from "./pages/UserDashboard.jsx"; // Updated
 import Profile from "./pages/Profile.jsx";
 import Signin from "./pages/Signin.jsx";
 import Signup from "./pages/Signup.jsx";
+import QuizPage from "./pages/QuizPage.jsx"; // New
+import QuizListPage from "./pages/QuizListPage.jsx"; // New
+import ResultPage from "./pages/ResultPage.jsx"; // New
 
 const ProtectedRoute = ({ children, allowedRoles }) => {
   const { isLoggedIn, loading, user } = useContext(AuthContext);
@@ -37,12 +36,10 @@ function App() {
 
   const getDashboardByRole = () => {
     switch (user?.role) {
-      case 'admin':
+      case "admin":
         return <AdminDashboard />;
-      case 'teacher':
-        return <TeacherDashboard />;
-      case 'student':
-        return <StudentDashboard />;
+      case "user":
+        return <UserDashboard />; // Updated
       default:
         return <Navigate to="/signin" />;
     }
@@ -76,26 +73,26 @@ function App() {
                 }
               />
               <Route
-                path="/course-management"
+                path="/quizzes"
                 element={
-                  <ProtectedRoute allowedRoles={['admin', 'teacher']}>
-                    <CourseManagement />
+                  <ProtectedRoute>
+                    <QuizListPage />
                   </ProtectedRoute>
                 }
               />
               <Route
-                path="/enrollment-management"
+                path="/quiz/:id"
                 element={
-                  <ProtectedRoute allowedRoles={['admin']}>
-                    <EnrollmentManagement />
+                  <ProtectedRoute>
+                    <QuizPage />
                   </ProtectedRoute>
                 }
               />
               <Route
-                path="/grade-management"
+                path="/result/:id"
                 element={
-                  <ProtectedRoute allowedRoles={['admin', 'teacher']}>
-                    <GradeManagement />
+                  <ProtectedRoute>
+                    <ResultPage />
                   </ProtectedRoute>
                 }
               />

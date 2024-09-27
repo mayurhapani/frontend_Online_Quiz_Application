@@ -28,6 +28,7 @@ const Profile = () => {
         onChange={handleChange}
         fullWidth
         required
+        sx={{ mt: 2 }}
       />
       <TextField
         label="Email"
