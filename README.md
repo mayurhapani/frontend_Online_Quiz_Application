@@ -4,7 +4,7 @@ This is the frontend application for an Online Quiz Application, built with Reac
 
 ## Live Demo
 
-You can access the live application here: https://frontend-quiz-application.vercel.app
+You can access the live application here: https://frontend-online-quiz-application.vercel.app
 
 ## Features
 
