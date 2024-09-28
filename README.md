@@ -1,23 +1,17 @@
-# Education Management System Frontend
+# Online Quiz Application Frontend
 
-This is the frontend application for an Education Management system, built with React and Vite.
+This is the frontend application for an Online Quiz Application, built with React and Vite.
 
 ## Live Demo
 
-You can access the live application here: https://frontend-education-management.vercel.app
-
-# the admin credentials are:
-
-email: hapanimayur@gmail.com
-password: Mayur@123
+You can access the live application here: https://frontend-quiz-application.vercel.app
 
 ## Features
 
 - User authentication (login/signup)
-- Dashboard for students, teachers, and admins
-- Manage courses, assignments, and grades
-- Track course progress
-- Submit and grade assignments
+- Dashboard for users and admins
+- Manage quizzes and questions
+- Submit quizzes and view scores
 - Role-based access control (RBAC)
 - Responsive design for mobile and desktop
 
@@ -29,7 +23,6 @@ password: Mayur@123
 - Axios for API requests
 - React Router for navigation
 - React Toastify for notifications
-- Tailwind CSS for styling
 
 ## Getting Started
 
@@ -43,13 +36,13 @@ password: Mayur@123
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/mayurhapani/frontend_Education_Management.git
+   git clone https://github.com/mayurhapani/frontend_Online_Quiz_Application.git
    ```
 
 2. Navigate to the project directory:
 
    ```bash
-   cd frontend_Education_Management
+   cd frontend_Online_Quiz_Application
    ```
 
 3. Install dependencies:
@@ -65,9 +58,11 @@ password: Mayur@123
    ```
 
 4. Create a `.env` file in the root directory and add the following:
-   ```bash
+
+   ```env
    VITE_BASE_URL=http://localhost:8001
    ```
+
    Replace the URL with your backend API URL if different.
 
 ### Running the Application
@@ -104,17 +99,13 @@ yarn build
 
 This project is set up for easy deployment on Vercel. Connect your GitHub repository to Vercel for automatic deployments on every push to the main branch.
 
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
 ## License
 
 This project is open source and available under the [MIT License](LICENSE).
 
 ## Contact
 
-Project Link: https://github.com/mayurhapani/frontend_Education_Management.git
+Project Link: https://github.com/mayurhapani/frontend_Online_Quiz_Application.git
 
 ## Acknowledgements
 
