@@ -15,6 +15,8 @@ import Signup from "./pages/Signup.jsx";
 import QuizPage from "./pages/QuizPage.jsx"; // New
 import QuizListPage from "./pages/QuizListPage.jsx"; // New
 import ResultPage from "./pages/ResultPage.jsx"; // New
+import CreateQuiz from "./pages/CreateQuiz.jsx"; // New
+import EditQuiz from "./pages/EditQuiz.jsx"; // New
 
 const ProtectedRoute = ({ children, allowedRoles }) => {
   const { isLoggedIn, loading, user } = useContext(AuthContext);
@@ -56,14 +58,7 @@ function App() {
             <Routes>
               <Route path="/signin" element={<Signin />} />
               <Route path="/signup" element={<Signup />} />
-              <Route
-                path="/"
-                element={
-                  <ProtectedRoute>
-                    {getDashboardByRole()}
-                  </ProtectedRoute>
-                }
-              />
+              <Route path="/" element={<ProtectedRoute>{getDashboardByRole()}</ProtectedRoute>} />
               <Route
                 path="/profile"
                 element={
@@ -93,6 +88,30 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <ResultPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/create-quiz"
+                element={
+                  <ProtectedRoute allowedRoles={["admin"]}>
+                    <CreateQuiz />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/edit-quiz/:id"
+                element={
+                  <ProtectedRoute allowedRoles={["admin"]}>
+                    <EditQuiz />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin-dashboard"
+                element={
+                  <ProtectedRoute allowedRoles={["admin"]}>
+                    <AdminDashboard />
                   </ProtectedRoute>
                 }
               />

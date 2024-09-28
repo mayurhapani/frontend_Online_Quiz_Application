@@ -18,9 +18,12 @@ const QuizPage = () => {
   const [quiz, setQuiz] = useState(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState("");
+  const [answers, setAnswers] = useState([]);
   const [score, setScore] = useState(0);
   const [showScore, setShowScore] = useState(false);
   const navigate = useNavigate();
+
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     fetchQuiz();
@@ -40,6 +43,13 @@ const QuizPage = () => {
   };
 
   const handleNextQuestion = () => {
+    const newAnswers = [...answers];
+    newAnswers[currentQuestionIndex] = {
+      questionId: quiz.questions[currentQuestionIndex]._id,
+      userAnswer: selectedAnswer,
+    };
+    setAnswers(newAnswers);
+
     if (quiz.questions[currentQuestionIndex].correctAnswer === selectedAnswer) {
       setScore(score + 1);
     }
@@ -48,20 +58,27 @@ const QuizPage = () => {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else {
       setShowScore(true);
-      submitQuiz();
+      submitQuiz(newAnswers);
     }
   };
 
-  const submitQuiz = async () => {
+  const submitQuiz = async (answers) => {
     try {
-      const response = await axios.post(`${BASE_URL}/quizzes/submit`, {
-        quizId: id,
-        answers: quiz.questions.map((q) => ({
-          questionId: q._id,
-          userAnswer: selectedAnswer,
-        })),
-      });
-      navigate(`/result/${response.data.data._id}`);
+      await axios.post(
+        `${BASE_URL}/quizzes/submit`,
+        {
+          quizId: id,
+          answers: answers,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
+      );
+
+      navigate(`/result/${id}`);
     } catch (error) {
       console.error("Error submitting quiz:", error);
     }

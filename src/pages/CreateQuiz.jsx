@@ -9,8 +9,12 @@ const BASE_URL = import.meta.env.VITE_BASE_URL;
 const CreateQuiz = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [questions, setQuestions] = useState([{ text: "", choices: ["", "", "", ""], correctAnswer: "" }]);
+  const [questions, setQuestions] = useState([
+    { text: "", choices: ["", "", "", ""], correctAnswer: "" },
+  ]);
   const navigate = useNavigate();
+
+  const token = localStorage.getItem("token");
 
   const handleAddQuestion = () => {
     setQuestions([...questions, { text: "", choices: ["", "", "", ""], correctAnswer: "" }]);
@@ -36,7 +40,16 @@ const CreateQuiz = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`${BASE_URL}/quizzes`, { title, description, questions });
+      await axios.post(
+        `${BASE_URL}/quizzes/createQuiz`,
+        { title, description, questions },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
+      );
       navigate("/admin-dashboard");
     } catch (error) {
       console.error("Error creating quiz:", error);
@@ -90,7 +103,9 @@ const CreateQuiz = () => {
               <TextField
                 label="Correct Answer"
                 value={question.correctAnswer}
-                onChange={(e) => handleQuestionChange(questionIndex, "correctAnswer", e.target.value)}
+                onChange={(e) =>
+                  handleQuestionChange(questionIndex, "correctAnswer", e.target.value)
+                }
                 fullWidth
                 required
                 sx={{ mb: 2 }}
@@ -102,18 +117,20 @@ const CreateQuiz = () => {
               </Box>
             </Paper>
           ))}
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleAddQuestion}
-            startIcon={<AddCircleOutline />}
-            sx={{ mb: 2 }}
-          >
-            Add Question
-          </Button>
-          <Button type="submit" variant="contained" color="primary">
-            Create Quiz
-          </Button>
+          <Box display="flex" justifyContent="space-between" sx={{ mb: 2 }}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleAddQuestion}
+              startIcon={<AddCircleOutline />}
+              sx={{ mb: 2 }}
+            >
+              Add Question
+            </Button>
+            <Button type="submit" variant="contained" color="primary">
+              Create Quiz
+            </Button>
+          </Box>
         </Box>
       </Paper>
     </Container>

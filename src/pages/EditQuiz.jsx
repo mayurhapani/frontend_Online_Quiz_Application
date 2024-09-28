@@ -15,6 +15,8 @@ const EditQuiz = () => {
   ]);
   const navigate = useNavigate();
 
+  const token = localStorage.getItem("token");
+
   useEffect(() => {
     fetchQuiz();
   }, [id]);
@@ -55,7 +57,16 @@ const EditQuiz = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.patch(`${BASE_URL}/quizzes/${id}`, { title, description, questions });
+      await axios.patch(
+        `${BASE_URL}/quizzes/editQuiz/${id}`,
+        { title, description, questions },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
+      );
       navigate("/admin-dashboard");
     } catch (error) {
       console.error("Error updating quiz:", error);
@@ -123,18 +134,19 @@ const EditQuiz = () => {
               </Box>
             </Paper>
           ))}
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleAddQuestion}
-            startIcon={<AddCircleOutline />}
-            sx={{ mb: 2 }}
-          >
-            Add Question
-          </Button>
-          <Button type="submit" variant="contained" color="primary">
-            Update Quiz
-          </Button>
+          <Box display="flex" justifyContent="space-between" sx={{ mb: 2 }}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleAddQuestion}
+              startIcon={<AddCircleOutline />}
+            >
+              Add Question
+            </Button>
+            <Button type="submit" variant="contained" color="primary">
+              Update Quiz
+            </Button>
+          </Box>
         </Box>
       </Paper>
     </Container>

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Container, Typography, Paper, Box, Button } from "@mui/material";
 import axios from "axios";
+import { getToken } from "../utils/tokenUtils";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
@@ -16,7 +17,13 @@ const ResultPage = () => {
 
   const fetchResult = async () => {
     try {
-      const response = await axios.get(`${BASE_URL}/responses/${id}`);
+      const response = await axios.get(`${BASE_URL}/responses/${id}`, {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+        withCredentials: true,
+      });
+
       setResult(response.data.data);
     } catch (error) {
       console.error("Error fetching result:", error);
@@ -34,14 +41,14 @@ const ResultPage = () => {
       </Typography>
       <Paper elevation={3} sx={{ p: 3 }}>
         <Typography variant="h5" gutterBottom>
-          Your score: {result.score} / {result.totalQuestions}
+          Your score: {result.score} / {result.answers.length}
         </Typography>
         <Box sx={{ mt: 2 }}>
-          {result.questions.map((question, index) => (
+          {result.answers.map((answer, index) => (
             <Paper key={index} elevation={2} sx={{ p: 2, mb: 2 }}>
-              <Typography variant="h6">{question.text}</Typography>
-              <Typography variant="body1">Your answer: {question.userAnswer}</Typography>
-              <Typography variant="body1">Correct answer: {question.correctAnswer}</Typography>
+              <Typography variant="h6">{answer.questionId.text}</Typography>
+              <Typography variant="body1">Your answer: {answer.userAnswer}</Typography>
+              <Typography variant="body1">Correct answer: {answer.questionId.correctAnswer}</Typography>
             </Paper>
           ))}
         </Box>

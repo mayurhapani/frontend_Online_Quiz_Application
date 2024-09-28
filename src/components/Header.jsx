@@ -20,12 +20,13 @@ const Header = () => {
         </Typography>
         {isLoggedIn ? (
           <>
-            <Button color="inherit" component={Link} to="/">
-              Dashboard
-            </Button>
-            {user.role === "admin" && (
+            {user.role === "admin" ? (
               <Button color="inherit" component={Link} to="/admin-dashboard">
                 Admin Dashboard
+              </Button>
+            ) : (
+              <Button color="inherit" component={Link} to="/">
+                Dashboard
               </Button>
             )}
             <Button color="inherit" component={Link} to="/profile">

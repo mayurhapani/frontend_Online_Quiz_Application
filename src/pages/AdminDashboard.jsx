@@ -8,6 +8,8 @@ const BASE_URL = import.meta.env.VITE_BASE_URL;
 const AdminDashboard = () => {
   const [quizzes, setQuizzes] = useState([]);
 
+  const token = localStorage.getItem("token");
+
   useEffect(() => {
     fetchQuizzes();
   }, []);
@@ -23,7 +25,12 @@ const AdminDashboard = () => {
 
   const handleDeleteQuiz = async (quizId) => {
     try {
-      await axios.delete(`${BASE_URL}/quizzes/${quizId}`);
+      await axios.delete(`${BASE_URL}/quizzes/deleteQuiz/${quizId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true,
+      });
       setQuizzes(quizzes.filter((quiz) => quiz._id !== quizId));
     } catch (error) {
       console.error("Error deleting quiz:", error);

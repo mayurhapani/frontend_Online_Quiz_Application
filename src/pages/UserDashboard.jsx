@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Container, Typography, Grid, Paper, Button } from "@mui/material";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { getToken } from "../utils/tokenUtils";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
@@ -14,7 +15,12 @@ const UserDashboard = () => {
 
   const fetchQuizzes = async () => {
     try {
-      const response = await axios.get(`${BASE_URL}/quizzes`);
+      const response = await axios.get(`${BASE_URL}/quizzes/with-responses`, {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+        withCredentials: true,
+      });
       setQuizzes(response.data.data);
     } catch (error) {
       console.error("Error fetching quizzes:", error);
@@ -36,9 +42,20 @@ const UserDashboard = () => {
               <Typography variant="body1" gutterBottom>
                 {quiz.description}
               </Typography>
-              <Button component={Link} to={`/quiz/${quiz._id}`} variant="contained" color="primary">
-                Start Quiz
-              </Button>
+              {quiz.response ? (
+                <Typography variant="body1" gutterBottom>
+                  Your score: {quiz.response.score} / {quiz.questions.length}
+                </Typography>
+              ) : (
+                <Button
+                  component={Link}
+                  to={`/quiz/${quiz._id}`}
+                  variant="contained"
+                  color="primary"
+                >
+                  Start Quiz
+                </Button>
+              )}
             </Paper>
           </Grid>
         ))}
